@@ -1,0 +1,13 @@
+package:
+    - name: main
+
+    define:
+        - greeting: hello
+
+
+    run:
+        - log: ${{ greeting }} world from ${{ js }}
+        - log: fixed !!
+        - log: we are in the ${{ __dir__ }} directory !!
+        - hello
+        - say: greeting uhoh
