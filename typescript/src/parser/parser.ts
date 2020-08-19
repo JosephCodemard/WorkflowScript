@@ -3,10 +3,13 @@ import { ReadInperpreterInput, WorkflowScript } from "../language-setup/interpre
 
 function strip (str: string): string{
     
+    str = str.replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, "");
+
     str = str.replace(/    /g, "\t");
 
     str = str.replace(/:/g, " :");
     str = str.replace(/-/g, "- ");
+    
 
     for (let i = 0; i < str.length; i++) {
         var spaces = 0;
@@ -106,6 +109,7 @@ function parse (file:any): Array<InterpretLine>{
     file = ReadInperpreterInput(file);
 
     const str:string = strip(file);
+
     const tupples:Array<ParsedLine> = toTupple(str);
 
     var arrayPointer:Array<ParsedLine> = [];

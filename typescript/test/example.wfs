@@ -1,13 +1,20 @@
+// EXAMPLE.wfs : main
+
 package:
     - name: main
+
+    /* 
+    Variable definitions
+     */
 
     define:
         - greeting: hello
 
-
+    /* The code that is run */
+    
     run:
         - log: ${{ greeting }} world from ${{ js }}
         - log: fixed !!
         - log: we are in the ${{ __dir__ }} directory !!
         - hello
-        - say: greeting uhoh
+        - say: greeting
