@@ -1,0 +1,5 @@
+export enum TYPES{
+    "USER_DEFINED" = "USER_DEFINED",
+    "CONFIG_DEFINED" = "CONFIG_DEFINED",
+    "RESERVED" = "RESERVED"
+}

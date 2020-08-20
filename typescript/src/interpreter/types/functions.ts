@@ -1,14 +1,11 @@
-export enum FUNCTYPES{
-    "USER_DEFINED" = "USER_DEFINED",
-    "CONFIG_DEFINED" = "CONFIG_DEFINED",
-    "RESERVED" = "RESERVED"
-}
+import { TYPES } from "./types"
+
 
 export interface Func{
     name:string;
     func:Function;
     expectvar: boolean;
-    type: FUNCTYPES;
+    type: TYPES;
     define?:Array<string>;
 }
 
@@ -21,15 +18,15 @@ export class FuncStack{
         this.functions = f;
     }
 
-    public GetFuncs() {
+    public Get() {
         return this.functions;
     }    
 
-    public AddFuncs(_fun:Func){
+    public Add(_fun:Func){
         this.functions.push(_fun);
     }
 
     public log(){
-        console.log(this.GetFuncs());
+        console.log(this.Get());
     }
 }

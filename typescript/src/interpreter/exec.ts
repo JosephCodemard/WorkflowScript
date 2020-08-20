@@ -1,37 +1,22 @@
-import { FuncStack, Func, FUNCTYPES } from "./functions";
-import { execSync } from "child_process"
+import { TYPES } from "../interpreter/types/types"
+
+import { FuncStack, Func } from "./types/functions";
 import { InterpretLine } from "../parser/parser";
-import { VarStack, Variable } from "./variables";
+import { VarStack, Variable } from "./types/variables";
 
 import { WFS_ERROR, ERRORCODES, ERRORTYPES } from "../error"
-
-export const log_func:Func = {
-    name: "log",
-    func: function(_:any){
-        console.log(_);
-    },
-    expectvar: false,
-    type: FUNCTYPES.USER_DEFINED
-}
-
-export const exec_func:Func = {
-    name: "exec",
-    func: function(_:string){
-        var exec = execSync(_);
-        console.log(exec.toString().trim());
-    },
-    expectvar: false,
-    type: FUNCTYPES.USER_DEFINED
-}
+import { BlockStack, Block } from "./types/blocks";
 
 export class Executor{
 
     public funcs: Array<Func>;
     public vars: Array<Variable>;
+    public blocks: Array<Block>
 
-    constructor(funcstack: FuncStack, varstack: VarStack){
-        this.funcs = funcstack.GetFuncs();
-        this.vars = varstack.GetVars();
+    constructor(funcstack: FuncStack, varstack: VarStack, blockstack: BlockStack){
+        this.funcs = funcstack.Get();
+        this.vars = varstack.Get();
+        this.blocks = blockstack.Get();
     }
 
     executeLine (line:InterpretLine) {
@@ -49,7 +34,7 @@ export class Executor{
         }
 
         if(expectvar){
-            console.log("FUNCTION expects a variable");
+            //console.log("FUNCTION expects a variable");
 
             for (let i = 0; i < params.length; i++) {
                 for (let k = 0; k < this.vars.length; k++) {

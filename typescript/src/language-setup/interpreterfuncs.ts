@@ -5,9 +5,10 @@ import * as fs from "fs";
 export class configuration{
     constructor(){}
 
-    public functions = {}
-    public constants = {}
-    public blocks = {}
+    public functions = {};
+    public constants = {};
+    public blocks = {};
+    public properties = {};
 }
 
 export class constant{
@@ -27,10 +28,21 @@ export class func{
     }
 }
 
+export class property{
+   constructor(){};
+}
+
 export class block{
-    public func:Function
-    constructor(fun:Function){
-        this.func = fun;
+
+    public name:string;
+    public path:string;
+    public func:Function;
+    public properties:Array<Object>;
+
+    constructor(func:Function|null, path:string, properties:Array<Object>){
+        this.path = path;
+        this.func = func;
+        this.properties = properties;
     }
 }
 
