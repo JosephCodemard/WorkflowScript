@@ -6,7 +6,7 @@ import { FuncStack } from "./types/functions";
 import { BlockStack } from "./types/blocks";
 import { PropertyStack } from "./types/properties";
 
-import { RESERVED_FUNCTIONS, RESERVED_VARIABLES, RESERVED_BLOCKS } from "../builtin/builtin"
+import { RESERVED_FUNCTIONS, RESERVED_VARIABLES, RESERVED_BLOCKS, RESERVED_PROPERTIES } from "../builtin/builtin"
 import { Executor } from "./exec"
 
 import { configuration } from "../language-setup/interpreterfuncs"
@@ -18,7 +18,7 @@ export class Interpreter{
     public varStack = new VarStack(RESERVED_VARIABLES);
     public funcStack = new FuncStack(RESERVED_FUNCTIONS);
     public blockStack = new BlockStack(RESERVED_BLOCKS);
-    public propertyStack = new PropertyStack();
+    public propertyStack = new PropertyStack(RESERVED_PROPERTIES);
 
     public executor = new Executor(this.funcStack, this.varStack, this.blockStack, this.propertyStack);
 
@@ -33,6 +33,7 @@ export class Interpreter{
                 type: TYPES.CONFIG_DEFINED
             });
         }
+
 
       
         for (const key in config.constants) {
@@ -60,17 +61,27 @@ export class Interpreter{
                 path: config.blocks[key].path,
                 properties: config.blocks[key].properties
             });
+
+            for (const prop in config.blocks[key].properties) {
+                this.propertyStack.Add({
+                    name: key,
+                    type: TYPES.CONFIG_DEFINED
+                })
+            }
         }
     }
 
-    interpret(){
+    interpret(_log=false){
 
         this.executor.ExecuteProgram(this.lines);
 
-        console.log("\n\n[COMPLETE]\n\n");
-        this.varStack.log();
-        this.funcStack.log();
-        this.blockStack.log();
+        if( _log ) { 
+            console.log("\n\n[COMPLETE]\n\n"); 
+
+            this.varStack.log();
+            this.funcStack.log();
+            this.blockStack.log();
+        }
     }
 
 }

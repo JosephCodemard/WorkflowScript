@@ -1,6 +1,8 @@
 // IMPORTS
 import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error/error";
 import * as fs from "fs";
+import { Property } from "../interpreter/types/properties";
+import { TYPES } from "../interpreter/types/types";
 
 export class configuration{
     constructor(){}
@@ -37,12 +39,19 @@ export class block{
     public name:string;
     public path:string;
     public func:Function;
-    public properties:Array<Object>;
+    public properties:Array<Property> = [];
 
-    constructor(func:Function|null, path:string, properties:Array<Object>){
+    constructor(func:Function|null, path:string, properties:Array<any>){
         this.path = path;
         this.func = func;
-        this.properties = properties;
+
+        for (let i = 0; i < properties.length; i++) {
+            this.properties.push({
+                name: properties[i].name,
+                type: TYPES.CONFIG_DEFINED
+            })   
+        }
+
     }
 }
 

@@ -4,7 +4,9 @@ import { TYPES } from "../interpreter/types/types"
 import { Variable } from "../interpreter/types/variables";
 import { Block } from "../interpreter/types/blocks";
 
-import { DEFINE_BLOCK, RUN_BLOCK } from "./blocks/blocks"
+import { DEFINE_BLOCK, RUN_BLOCK } from "./blocks/required"
+import { Property } from "../interpreter/types/properties";
+import { IF_BLOCK, LOOPS_BLOCK } from "./blocks/addon";
 
 export const log_func:Func = {
     name: "log",
@@ -36,5 +38,11 @@ export const RESERVED_VARIABLES :Array<Variable> = [
 ]
 
 export const RESERVED_BLOCKS :Array<Block> = [
-    DEFINE_BLOCK, RUN_BLOCK
- ]
+    DEFINE_BLOCK,
+    RUN_BLOCK,
+    IF_BLOCK,
+    LOOPS_BLOCK
+]
+
+export const RESERVED_PROPERTIES :Array<Property> = []
+RESERVED_BLOCKS.forEach(b => ( b.properties.forEach ( p => RESERVED_PROPERTIES.push( p ) ) ) )

@@ -6,7 +6,7 @@ import { VarStack } from "./types/variables";
 import { PropertyStack } from "./types/properties";
 
 import { InterpretLine } from "../parser/parser";
-import { EXECUTE_STATMENT } from "../builtin/blocks/exec"
+import { EXECUTE_STATMENT } from "./wfsFunctions"
 
 import { WFS_ERROR, ERRORCODES, ERRORTYPES } from "../error/error"
 import * as bultin_err from "../error/error_bultin";

@@ -16,7 +16,3 @@ package:
     run:
 
         - log: ${{ greeting }} world from ${{ js }}
-
-    loop:
-        - loops: 10
-        - log: hello

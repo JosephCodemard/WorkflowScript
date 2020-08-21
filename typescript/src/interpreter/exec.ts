@@ -28,9 +28,11 @@ export class Executor{
     }
 
 
-    ExecuteProgram(program:Array<InterpretLine>){
+    ExecuteProgram(program:Array<InterpretLine>, _log=false){
 
-        console.log("[STARTING...]")
+        if(_log){
+            console.log("[STARTING...]");
+        }
 
         for(var i = 0; i < program.length; i++){
 
@@ -47,10 +49,12 @@ export class Executor{
                             _str += (line.parsed[e] + ".");                           
                         }
                         
-                        console.log(" * found: ", b)
-                        console.log("   - line.parsed.includes(b.path): ", _str.includes(b.path))
-                        console.log("   - parsed: ", line.parsed);
-                        console.log("\n   - IN LOOP:")
+                        if(_log){
+                            console.log(" * found: ", b);
+                            console.log("   - line.parsed.includes(b.path): ", _str.includes(b.path));
+                            console.log("   - parsed: ", line.parsed);
+                            console.log("\n   - IN LOOP:");
+                        }
 
                         if(_str.includes(b.path)){
 
@@ -64,7 +68,7 @@ export class Executor{
                                 if(!program[j].line.block){
                                     for(let f = 0; f < path.length; f++){ // loop over elements in array
                                         if(!(program[j].parsed[f] === path[f])){
-                                            console.log("       - ENDING: ", f)
+                                            if(_log){ console.log("       - ENDING: ", f); }
                                             found = true;
                                             break;
                                         }
@@ -76,7 +80,7 @@ export class Executor{
                                 }
                             }
 
-                            console.log("   - elements: ", elements)
+                            if( _log ){ console.log("   - elements: ", elements); }
 
                             const ArrContainsArr = (arr:InterpretLine[], target:Property[]) => {
 
@@ -92,9 +96,9 @@ export class Executor{
 
 
                             if(ArrContainsArr(elements,b.properties)){
-                                console.log("   - executing...")
                                 const _wfs = new wfs(this.varstack, this.funcstack, this.propertystack, elements);
-                                console.log("b: ", b);
+                                
+                                if( _log ) { console.log("b: ", b); }
                                 b.func(_wfs);
                             }else{
                                 var temp_str:string = "";
@@ -105,21 +109,6 @@ export class Executor{
                         }
                     }
                 }
-            }
-
-
-            if( !line.line.block ){
-
-                
-
-
-                // if(line.parsed.includes("define")){
-                //     line.line.value = line.line.value.replace(/["']/g,"");
-                //     this.varStack.Add({name: line.line.name, value: line.line.value, define: line.parsed, type: TYPES.USER_DEFINED});
-                // }
-                // else if(line.parsed.includes("run")){
-                //     this.executor.executeLine(line);
-                // }
             }
         }
 

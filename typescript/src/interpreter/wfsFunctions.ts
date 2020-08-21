@@ -1,22 +1,16 @@
-import { InterpretLine } from "../../parser/parser";
-import { WFS_ERROR, ERRORCODES, ERRORTYPES } from "../../error/error"
-import * as bultin_err from "../../error/error_bultin";
-import { TYPES } from "../../interpreter/types/types";
-import { wfs } from "../../interpreter/wfs";
+import { InterpretLine } from "../parser/parser";
+import { WFS_ERROR, ERRORCODES, ERRORTYPES } from "../error/error"
+import * as bultin_err from "../error/error_bultin";
+import { TYPES } from "./types/types";
+import { wfs } from "./wfs";
 
-export function EXECUTE_STATMENT (line:InterpretLine, wfs:wfs) {
-    console.log("EXECUTING: ", line);
+export function EXECUTE_STATMENT (line:InterpretLine, wfs:wfs, _log=false) {
+    if( _log ) { console.log("EXECUTING: ", line); }
     var params = line.line.value.split(",")
     var name = line.line.name;
 
     var _FUNCTION:Function;
     var expectvar:boolean;
-
-    for (let i = 0; i < wfs.properties.Get().length; i++) {
-        if(wfs.properties.Get()[i].name == name){
-            return
-        }
-    }
 
     for (let i = 0; i < wfs.functions.GetAll().length; i++) {
         if(wfs.functions.GetAll()[i].name === name){
@@ -77,7 +71,17 @@ export function EXECUTE_STATMENT (line:InterpretLine, wfs:wfs) {
             }          
         }
     }
+
     if(!_FUNCTION){
+
+        for (let i = 0; i < wfs.properties.Get().length; i++) {
+            if(wfs.properties.Get()[i].name == name){
+                return
+            }
+        }
+
+        console.log(wfs.properties.Get())
+
         throw new WFS_ERROR(ERRORCODES.FATAL, ERRORTYPES.INVALID_CONFIGURATION, `function "${name}" does not exist in the current context`);
     }
     _FUNCTION(...params)
