@@ -1,25 +1,15 @@
+// IMPORTS
 import { TYPES } from "../interpreter/types/types"
 
-import { FuncStack, Func } from "./types/functions";
+import { FuncStack } from "./types/functions";
+import { VarStack } from "./types/variables";
+import { PropertyStack } from "./types/properties";
+
 import { InterpretLine } from "../parser/parser";
-import { VarStack, Variable } from "./types/variables";
+import { EXECUTE_STATMENT } from "../builtin/blocks/exec"
 
 import { WFS_ERROR, ERRORCODES, ERRORTYPES } from "../error/error"
-import { BlockStack, Block } from "./types/blocks";
 import * as bultin_err from "../error/error_bultin";
-
-import { EXECUTE_STATMENT } from "../builtin/blocks/exec"
-import { block } from "../language-setup/interpreter";
-
-// class given to function...
-
-// wfs.varstack.[Add()|Get()];                  [✔️]
-// wfs.funcstack.[Add()|Get()];                 [✔️]
-
-// wfs.entries                  ## object ##
-// wfs.entries.asArray()        ## array ##     
-
-// wfs.builtin.exec()   // executes line
 
 class wfs_entries{
 
@@ -29,25 +19,41 @@ class wfs_entries{
         this.entries = lines;
     }
 
-    
-    Get(){
+    GetAll(){
         var obj = []
 
         this.entries.forEach(e => {
             if(! e.line.block){
                 obj.push({
                     name: e.line.name,
-                    value: e.line.value,
-                    
-                })
+                    value: e.line.value
+                });
             }
         });
 
         return obj;
     }
 
-    GetRaw(){
+    GetAllRaw(){
         return this.entries;
+    }
+
+    Get(name:string){
+        for (let i = 0; i < this.entries.length; i++) {
+            if(! this.entries[i].line.block && this.entries[i].line.name == name){
+                return {
+                    name: this.entries[i].line.name,
+                    value: this.entries[i].line.value
+                }
+            }            
+        }
+    }
+    GetRaw(name:string){
+        for (let i = 0; i < this.entries.length; i++) {
+            if(! this.entries[i].line.block && this.entries[i].line.name == name){
+                return this.entries[i]
+            }            
+        }
     }
 }
 
@@ -87,8 +93,16 @@ class wfs_vars{
         });
     }
 
-    Get(){
+    GetAll(){
         return this.varstack.Get();
+    }
+
+    Get(name:string){
+        for (let i = 0; i < this.varstack.Get().length; i++) {
+            if(this.varstack.Get()[i].name == name){
+                this.varstack.Get();
+            }            
+        }
     }
 
     Log(){
@@ -113,8 +127,16 @@ class wfs_funcs{
         });
     }
 
-    Get(){
+    GetAll(){
         return this.funcstack.Get();
+    }
+
+    Get(name:string){
+        for (let i = 0; i < this.funcstack.Get().length; i++) {
+            if(this.funcstack.Get()[i].name == name){
+                this.funcstack.Get();
+            }            
+        }
     }
 
     Log(){
@@ -129,13 +151,15 @@ export class wfs{
 
     public variables:wfs_vars;
     public functions:wfs_funcs;
+    public properties:PropertyStack;
 
-    constructor(v:VarStack, f:FuncStack, lines:Array<InterpretLine>){
+    constructor(v:VarStack, f:FuncStack, p:PropertyStack, lines:Array<InterpretLine>){
 
         this.entries = new wfs_entries(lines);
         this.builtin = new wfs_builtin(this);
 
         this.variables = new wfs_vars(v);
         this.functions = new wfs_funcs(f);
+        this.properties = p;
     }
 }

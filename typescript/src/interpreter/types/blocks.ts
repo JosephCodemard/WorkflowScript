@@ -1,9 +1,7 @@
 import { TYPES } from "./types"
+import { Property } from "./properties"
 
 
-export interface Property{
-    name:string;
-}
 export interface Block{
     name:string;
     func:any;

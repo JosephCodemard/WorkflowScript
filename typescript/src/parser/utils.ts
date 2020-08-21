@@ -1,3 +1,4 @@
+// IMPORTS
 import { LineData, ParsedLine } from "./interfaces"
 
 export function strip (str: string): string{

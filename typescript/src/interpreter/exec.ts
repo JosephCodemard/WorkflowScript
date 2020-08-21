@@ -1,27 +1,30 @@
 import { TYPES } from "../interpreter/types/types"
 
-import { FuncStack, Func } from "./types/functions";
-import { InterpretLine } from "../parser/parser";
-import { VarStack, Variable } from "./types/variables";
+import { FuncStack } from "./types/functions";
+import { VarStack } from "./types/variables";
+import { PropertyStack, Property } from "./types/properties";
+import { BlockStack } from "./types/blocks";
 
 import { WFS_ERROR, ERRORCODES, ERRORTYPES } from "../error/error"
-import { BlockStack, Block, Property } from "./types/blocks";
 import * as bultin_err from "../error/error_bultin";
 
 import { wfs } from "./wfs"
+import { InterpretLine } from "../parser/parser";
+
 
 export class Executor{
 
     private funcstack: FuncStack;
     private varstack: VarStack;
     private blockstack: BlockStack;
+    private propertystack: PropertyStack;
 
 
-
-    constructor(funcstack: FuncStack, varstack: VarStack, blockstack: BlockStack){
+    constructor(funcstack: FuncStack, varstack: VarStack, blockstack: BlockStack, propstack: PropertyStack){
         this.funcstack = funcstack;
         this.varstack = varstack;
         this.blockstack = blockstack;
+        this.propertystack = propstack;
     }
 
 
@@ -90,7 +93,7 @@ export class Executor{
 
                             if(ArrContainsArr(elements,b.properties)){
                                 console.log("   - executing...")
-                                const _wfs = new wfs(this.varstack, this.funcstack, elements);
+                                const _wfs = new wfs(this.varstack, this.funcstack, this.propertystack, elements);
                                 console.log("b: ", b);
                                 b.func(_wfs);
                             }else{

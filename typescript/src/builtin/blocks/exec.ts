@@ -12,10 +12,16 @@ export function EXECUTE_STATMENT (line:InterpretLine, wfs:wfs) {
     var _FUNCTION:Function;
     var expectvar:boolean;
 
-    for (let i = 0; i < wfs.functions.Get().length; i++) {
-        if(wfs.functions.Get()[i].name === name){
-            _FUNCTION = wfs.functions.Get()[i].func;
-            expectvar = wfs.functions.Get()[i].expectvar
+    for (let i = 0; i < wfs.properties.Get().length; i++) {
+        if(wfs.properties.Get()[i].name == name){
+            return
+        }
+    }
+
+    for (let i = 0; i < wfs.functions.GetAll().length; i++) {
+        if(wfs.functions.GetAll()[i].name === name){
+            _FUNCTION = wfs.functions.GetAll()[i].func;
+            expectvar = wfs.functions.GetAll()[i].expectvar
         }
     }
 
@@ -23,9 +29,9 @@ export function EXECUTE_STATMENT (line:InterpretLine, wfs:wfs) {
         //console.log("FUNCTION expects a variable");
 
         for (let i = 0; i < params.length; i++) {
-            for (let k = 0; k < wfs.variables.Get().length; k++) {
-                if(wfs.variables.Get()[k].name === params[i]){
-                    vval = wfs.variables.Get()[k].value;
+            for (let k = 0; k < wfs.variables.GetAll().length; k++) {
+                if(wfs.variables.GetAll()[k].name === params[i]){
+                    vval = wfs.variables.GetAll()[k].value;
                 }                    
             }
 
@@ -48,9 +54,9 @@ export function EXECUTE_STATMENT (line:InterpretLine, wfs:wfs) {
                     var vname = vname_raw.replace(/[(\$\{\{)(\}\}]/g, "").trim();
                     var vval = undefined
 
-                    for (let k = 0; k < wfs.variables.Get().length; k++) {
-                        if(wfs.variables.Get()[k].name === vname){
-                            vval = wfs.variables.Get()[k].value;
+                    for (let k = 0; k < wfs.variables.GetAll().length; k++) {
+                        if(wfs.variables.GetAll()[k].name === vname){
+                            vval = wfs.variables.GetAll()[k].value;
                         }                    
                     }
 
@@ -63,15 +69,16 @@ export function EXECUTE_STATMENT (line:InterpretLine, wfs:wfs) {
                     params[i] = params[i].replace(vname_raw, vval);
                 }
             }else{
-                for (let k = 0; k < wfs.variables.Get().length; k++) {
-                    if(params[i] === wfs.variables.Get()[k].name){
-                        params[i] = wfs.variables.Get()[k].value
+                for (let k = 0; k < wfs.variables.GetAll().length; k++) {
+                    if(params[i] === wfs.variables.GetAll()[k].name){
+                        params[i] = wfs.variables.GetAll()[k].value
                     }                
                 }  
             }          
         }
     }
-    if(_FUNCTION){
-        _FUNCTION(...params);
+    if(!_FUNCTION){
+        throw new WFS_ERROR(ERRORCODES.FATAL, ERRORTYPES.INVALID_CONFIGURATION, `function "${name}" does not exist in the current context`);
     }
+    _FUNCTION(...params)
 }

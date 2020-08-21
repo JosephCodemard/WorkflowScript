@@ -1,6 +1,5 @@
-
+// IMPORTS
 import * as _ from "lodash";
-import * as path from "path";
 import { InterpretLine } from "../parser/parser";
 
 export interface LineData{

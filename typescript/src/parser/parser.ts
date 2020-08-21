@@ -1,4 +1,5 @@
-import { ReadInperpreterInput, WorkflowScript } from "../language-setup/interpreterfuncs"
+// IMPORTS
+import { ReadInperpreterInput } from "../language-setup/interpreterfuncs"
 import { InterpretLine, ParsedLine } from "./interfaces"
 import { strip, toTupple, ToLineData } from "./utils"
 

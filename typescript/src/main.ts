@@ -1,4 +1,4 @@
-import { interpreter, JSONConverter, Parser } from "./WorkflowScript"
+import { interpreter, JSONConverter, Parser, WFS_CONFIG } from "./WorkflowScript"
 
 
 var config = new interpreter.configuration();
@@ -7,11 +7,13 @@ config.constants['js'] = new interpreter.constant('javascript');
 
 config.properties['loops'] = new interpreter.property();
 
-config.blocks['loop'] = new interpreter.block(function(wfs){
+config.blocks['loop'] = new interpreter.block(function(wfs:WFS_CONFIG){
 
-    wfs.entries.GetRaw().forEach(e => {
-        wfs.builtin.exec(e);
-    });
+    for(let i = 0; i < parseInt(wfs.entries.Get("loops").value); i ++){
+        wfs.entries.GetAllRaw().forEach(e => {
+            wfs.builtin.exec(e);
+        });
+    }
 
 }, "", [
     {name: "loops"}

@@ -8,7 +8,7 @@ export const DEFINE_BLOCK:Block = {
     path: "",
     func: function(wfs:wfs){
         console.log("running define function")
-        wfs.entries.Get().forEach(element => {
+        wfs.entries.GetAll().forEach(element => {
             wfs.variables.Add(element.name, element.value);
         });
     },
@@ -21,7 +21,7 @@ export const RUN_BLOCK:Block = {
     path: "",
     func: function(wfs:wfs){
         console.log("running run function")
-        wfs.entries.GetRaw().forEach(element => {
+        wfs.entries.GetAllRaw().forEach(element => {
             wfs.builtin.exec(element);
         });
     },

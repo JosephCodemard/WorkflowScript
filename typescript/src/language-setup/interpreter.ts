@@ -1,7 +1,8 @@
-import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error/error";
-import { parse, InterpretLine } from "../parser/parser"
+// IMPORTS
+import { parse } from "../parser/parser"
 import { Interpreter } from "../interpreter/interpreter"
 import * as fun from "./interpreterfuncs";
+// EXPORTS
 export {configuration, constant, WorkflowScript, block, func, property} from "./interpreterfuncs";
 
 

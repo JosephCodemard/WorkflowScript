@@ -12,7 +12,7 @@ export interface Func{
 
 export class FuncStack{
 
-    public functions:Array<Func> = [];
+    private functions:Array<Func> = [];
 
     constructor(f:Func[] = []){
         this.functions = f;

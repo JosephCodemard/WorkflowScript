@@ -1,14 +1,17 @@
-import { parse, InterpretLine } from "../parser/parser"
-import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error/error";
-import * as fun from "../language-setup/interpreterfuncs";
-import { VarStack, Variable } from "./types/variables";
-import { FuncStack, Func } from "./types/functions";
-import { Executor } from "./exec"
-import { RESERVED_FUNCTIONS, RESERVED_VARIABLES, RESERVED_BLOCKS } from "../builtin/builtin"
-import { configuration } from "../language-setup/interpreterfuncs"
-import { BlockStack } from "./types/blocks";
+// IMPORTS
 import { TYPES } from "./types/types"
+
+import { VarStack } from "./types/variables";
+import { FuncStack } from "./types/functions";
+import { BlockStack } from "./types/blocks";
 import { PropertyStack } from "./types/properties";
+
+import { RESERVED_FUNCTIONS, RESERVED_VARIABLES, RESERVED_BLOCKS } from "../builtin/builtin"
+import { Executor } from "./exec"
+
+import { configuration } from "../language-setup/interpreterfuncs"
+import { InterpretLine } from "../parser/parser"
+
 
 export class Interpreter{
 
@@ -17,7 +20,7 @@ export class Interpreter{
     public blockStack = new BlockStack(RESERVED_BLOCKS);
     public propertyStack = new PropertyStack();
 
-    public executor = new Executor(this.funcStack, this.varStack, this.blockStack);
+    public executor = new Executor(this.funcStack, this.varStack, this.blockStack, this.propertyStack);
 
     public lines:Array<InterpretLine>;
 

@@ -1,6 +1,6 @@
+// IMPORTS
 import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error/error";
 import * as fs from "fs";
-
 
 export class configuration{
     constructor(){}
@@ -29,7 +29,7 @@ export class func{
 }
 
 export class property{
-   constructor(){};
+    constructor(){}
 }
 
 export class block{

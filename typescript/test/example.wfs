@@ -19,3 +19,4 @@ package:
 
     loop:
         - loops: 10
+        - log: hello

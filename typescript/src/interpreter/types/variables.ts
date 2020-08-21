@@ -9,7 +9,7 @@ export interface Variable{
 
 export class VarStack{
 
-    public variables:Array<Variable>;
+    private variables:Array<Variable>;
 
     constructor(v:Array<Variable> = []){
         this.variables = v;

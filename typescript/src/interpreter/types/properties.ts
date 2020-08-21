@@ -9,7 +9,7 @@ export interface Property{
 
 export class PropertyStack{
 
-    public properties:Array<Property> = [];
+    private properties:Array<Property> = [];
 
     constructor(p:Property[] = []){
         this.properties = p;
