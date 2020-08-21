@@ -1,4 +1,4 @@
-import { interpreter, JSONConverter, Parser, WFS_CONFIG } from "./WorkflowScript"
+import { interpreter, JSONConverter, Parser, WFS_CONFIG } from "./core/WorkflowScript"
 
 
 var config = new interpreter.configuration();

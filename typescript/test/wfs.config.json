@@ -1,0 +1,11 @@
+{
+    "file": "./test/example.wfs",
+    "config": "./test/example.ts",
+    "out": "./test/out.json",
+    "json": true,
+    "interpret": false,
+    "constants":{
+        "js": "javascript"
+    },
+    "debug":true
+}
