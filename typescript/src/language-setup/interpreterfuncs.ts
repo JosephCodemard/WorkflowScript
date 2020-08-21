@@ -1,4 +1,4 @@
-import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error";
+import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error/error";
 import * as fs from "fs";
 
 

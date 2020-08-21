@@ -1,26 +1,20 @@
 import { parse, InterpretLine } from "../parser/parser"
-import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error";
+import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error/error";
 import * as fun from "../language-setup/interpreterfuncs";
 import { VarStack, Variable } from "./types/variables";
 import { FuncStack, Func } from "./types/functions";
 import { Executor } from "./exec"
-import { log_func, exec_func } from "./builtin"
+import { RESERVED_FUNCTIONS, RESERVED_VARIABLES, RESERVED_BLOCKS } from "../builtin/builtin"
 import { configuration } from "../language-setup/interpreterfuncs"
 import { BlockStack } from "./types/blocks";
 import { TYPES } from "./types/types"
 import { PropertyStack } from "./types/properties";
 
-const PredefinedFunctions:Func[] = [
-    exec_func,
-    log_func
-]
-
-
 export class Interpreter{
 
-    public varStack = new VarStack();
-    public funcStack = new FuncStack(PredefinedFunctions);
-    public blockStack = new BlockStack();
+    public varStack = new VarStack(RESERVED_VARIABLES);
+    public funcStack = new FuncStack(RESERVED_FUNCTIONS);
+    public blockStack = new BlockStack(RESERVED_BLOCKS);
     public propertyStack = new PropertyStack();
 
     public executor = new Executor(this.funcStack, this.varStack, this.blockStack);
@@ -60,28 +54,20 @@ export class Interpreter{
                 name: key,
                 func: config.blocks[key].func,
                 type: TYPES.CONFIG_DEFINED,
+                path: config.blocks[key].path,
+                properties: config.blocks[key].properties
             });
         }
     }
 
     interpret(){
-        this.lines.forEach(line => {
-            if( !line.line.block ){
-                //console.log(line);
 
-                if(line.parsed.includes("define")){
-                    line.line.value = line.line.value.replace(/["']/g,"");
-                    this.varStack.Add({name: line.line.name, value: line.line.value, define: line.parsed, type: TYPES.USER_DEFINED});
-                }
-                else if(line.parsed.includes("run")){
-                    this.executor.executeLine(line);
-                }
-            }
-        });
+        this.executor.ExecuteProgram(this.lines);
 
-        console.log("\n\n\n\n");
+        console.log("\n\n[COMPLETE]\n\n");
         this.varStack.log();
         this.funcStack.log();
+        this.blockStack.log();
     }
 
 }

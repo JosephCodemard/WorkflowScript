@@ -9,13 +9,13 @@ package:
 
     define:
         - greeting: hello
+        - name: jeff
 
     /* The code that is run */
     
     run:
 
         - log: ${{ greeting }} world from ${{ js }}
-        - log: fixed !!
-        - log: we are in the ${{ __dir__ }} directory !!
-        - hello
-        - say: greeting
+
+    loop:
+        - loops: 10

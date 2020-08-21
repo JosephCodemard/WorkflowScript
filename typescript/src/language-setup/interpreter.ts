@@ -1,4 +1,4 @@
-import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error";
+import { WFS_ERROR, ERRORTYPES, ERRORCODES } from "../error/error";
 import { parse, InterpretLine } from "../parser/parser"
 import { Interpreter } from "../interpreter/interpreter"
 import * as fun from "./interpreterfuncs";

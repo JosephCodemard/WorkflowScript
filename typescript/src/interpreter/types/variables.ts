@@ -1,5 +1,4 @@
 import { TYPES } from "./types"
-import { RESERVED_VARIABLES } from "../builtin"
 
 export interface Variable{
     name:string;
@@ -10,7 +9,11 @@ export interface Variable{
 
 export class VarStack{
 
-    public variables:Array<Variable> = RESERVED_VARIABLES;
+    public variables:Array<Variable>;
+
+    constructor(v:Array<Variable> = []){
+        this.variables = v;
+    }
 
     public Get() {
         return this.variables;

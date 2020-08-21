@@ -1,17 +1,25 @@
 import { TYPES } from "./types"
-import { RESERVED_BLOCKS } from "../builtin"
 
 
+export interface Property{
+    name:string;
+}
 export interface Block{
     name:string;
     func:any;
-    type: TYPES,
+    type:TYPES,
+    path:string,
+    properties:Array<Property>
     define?:Array<string>;
 }
 
 export class BlockStack{
 
-    public blocks:Array<Block> = RESERVED_BLOCKS;
+    public blocks:Array<Block>;
+
+    constructor(b:Array<Block> = []){
+        this.blocks = b;
+    }
 
     public Get() {
         return this.blocks;
