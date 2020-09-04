@@ -1,18 +1,16 @@
-// EXAMPLE.wfs : main
 
-package:
-    - name: main
+define:
+    - greeting: hello
+    - name: jeff
 
-    /* 
-    Variable definitions
-    */
+run:
+    - log: ${{ greeting }} world from ${{ js }}
 
-    define:
-        - greeting: hello
-        - name: jeff
+    loop:
+        - loops: 2
+        - log: hello
 
-    /* The code that is run */
-    
-    run:
-
-        - log: ${{ greeting }} world from ${{ js }}
+        loop:
+            - loops: 2
+            - log: world
+        - log: bye

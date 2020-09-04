@@ -1,117 +1,52 @@
-import { TYPES } from "../interpreter/types/types"
-
-import { FuncStack } from "./types/functions";
-import { VarStack } from "./types/variables";
-import { PropertyStack, Property } from "./types/properties";
-import { BlockStack } from "./types/blocks";
-
-import { WFS_ERROR, ERRORCODES, ERRORTYPES } from "../error/error"
-import * as bultin_err from "../error/error_bultin";
-
-import { wfs } from "./wfs"
+import { Program } from "./program"
 import { InterpretLine } from "../parser/parser";
+import { ExecuteBlock } from "./execblock"
+import { GetElements } from "./utils";
 
+function RemoveLastElement(arr:any[]){
+    var tmp = [...arr];
+    tmp.pop()
+    return tmp;
+}
+
+function ArrayCompare(arr1:any[], arr2:any[]){
+    return JSON.stringify(arr1) == JSON.stringify(arr2)
+}
 
 export class Executor{
 
-    private funcstack: FuncStack;
-    private varstack: VarStack;
-    private blockstack: BlockStack;
-    private propertystack: PropertyStack;
+    public program:Program;
 
-
-    constructor(funcstack: FuncStack, varstack: VarStack, blockstack: BlockStack, propstack: PropertyStack){
-        this.funcstack = funcstack;
-        this.varstack = varstack;
-        this.blockstack = blockstack;
-        this.propertystack = propstack;
+    constructor(prog:Program){
+        this.program = prog;
     }
 
+    ExecuteSubProgram(lines:InterpretLine[]){
 
-    ExecuteProgram(program:Array<InterpretLine>, _log=false){
+        this.program.log("[INFO] line.length: ", lines.length)
 
-        if(_log){
-            console.log("[STARTING...]");
-        }
+        var firstBlock:string[] = undefined;
 
-        for(var i = 0; i < program.length; i++){
+        for (let i = 0; i < lines.length; i++) {
 
-            const line = program[i];
+            // If it is a line use EXECUTEBLOCK
+            if( lines[i].line.block ){
 
-            if(line.line.block){ // is a block
-                for(let k = 0; k < this.blockstack.Get().length; k++){
-                    const b = this.blockstack.Get()[k];
-                    
-                    if(b.name == line.parsed[line.parsed.length - 1]){
-
-                        var _str:string;
-                        for (let e = 0; e < line.parsed.length; e++) {
-                            _str += (line.parsed[e] + ".");                           
-                        }
-                        
-                        if(_log){
-                            console.log(" * found: ", b);
-                            console.log("   - line.parsed.includes(b.path): ", _str.includes(b.path));
-                            console.log("   - parsed: ", line.parsed);
-                            console.log("\n   - IN LOOP:");
-                        }
-
-                        if(_str.includes(b.path)){
-
-                            const path = line.parsed;
-                            var elements:Array<InterpretLine> = []
-
-                            for (let j = i; j < program.length; j++) {// loop through rest of the program
-
-                                var found = false;
-
-                                if(!program[j].line.block){
-                                    for(let f = 0; f < path.length; f++){ // loop over elements in array
-                                        if(!(program[j].parsed[f] === path[f])){
-                                            if(_log){ console.log("       - ENDING: ", f); }
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if ( found ) { break; }
-
-                                    elements.push(program[j]);
-                                }
-                            }
-
-                            if( _log ){ console.log("   - elements: ", elements); }
-
-                            const ArrContainsArr = (arr:InterpretLine[], target:Property[]) => {
-
-                                if(target.length > 0){
-                                    var _arr:string[] = [];
-                                    var _tar:string[] = [];
-                                    arr.every(e => (_arr.push(e.line.name)));
-                                    target.every(e => (_tar.push(e.name)));
-                                    return _tar.every(v => _arr.includes(v));
-                                }
-                                return true;
-                            };
-
-
-                            if(ArrContainsArr(elements,b.properties)){
-                                const _wfs = new wfs(this.varstack, this.funcstack, this.propertystack, elements);
-                                
-                                if( _log ) { console.log("b: ", b); }
-                                b.func(_wfs);
-                            }else{
-                                var temp_str:string = "";
-                                b.properties.forEach(e => (temp_str += e.name));
-
-                                throw new WFS_ERROR(ERRORCODES.FATAL, ERRORTYPES.INVALID_SYNTAX, `Block "${b.name}" does not have properties: ${temp_str}`)
-                            }
-                        }
-                    }
+                // check if the indentation is the same so that sub-blocks are not executes here...
+                if(firstBlock === undefined){
+                    firstBlock = RemoveLastElement(lines[i].parsed);
                 }
-            }
+
+
+                if(ArrayCompare(RemoveLastElement(lines[i].parsed), firstBlock)){
+
+                    var linesToExecute = [lines[i]]
+                    linesToExecute.push(...GetElements(lines, i, this.program));
+            
+                    // lines is used when you don't want the whole program to be executed
+                    ExecuteBlock( linesToExecute, this.program );
+                }
+            }        
         }
-
     }
-
 }

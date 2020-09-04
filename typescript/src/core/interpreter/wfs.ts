@@ -6,10 +6,11 @@ import { VarStack } from "./types/variables";
 import { PropertyStack } from "./types/properties";
 
 import { InterpretLine } from "../parser/parser";
-import { EXECUTE_STATMENT } from "./wfsFunctions"
 
-import { WFS_ERROR, ERRORCODES, ERRORTYPES } from "../error/error"
-import * as bultin_err from "../error/error_bultin";
+import { ExecuteBlock } from "./execblock"
+import { ExecuteLine } from "./execline"
+import { Program } from "./program";
+import { GetElements } from "./utils";
 
 class wfs_entries{
 
@@ -66,12 +67,22 @@ class wfs_builtin{
     }
 
     exec(line:InterpretLine){
-        EXECUTE_STATMENT(line, this._wfs);
+        ExecuteLine(line, this._wfs.program);
     }
 
     execAll(lines:InterpretLine[]){
+        var i = 0;
         lines.forEach(l => {
-            EXECUTE_STATMENT(l, this._wfs);
+            if(!l.line.block){
+                this._wfs.program.log(" - executing line: ", l.line.name, " at ", l.parsed);
+                ExecuteLine(l, this._wfs.program);
+            }else{
+                this._wfs.program.log(" - executing block: ", l.line.name, " at ", l.parsed);
+                var linesToExecute = [lines[i]]
+                linesToExecute.push(...GetElements(lines, i, this._wfs.program));
+                ExecuteBlock(linesToExecute, this._wfs.program)
+            }
+            i++;
         })        
     }
 
@@ -153,13 +164,19 @@ export class wfs{
     public functions:wfs_funcs;
     public properties:PropertyStack;
 
-    constructor(v:VarStack, f:FuncStack, p:PropertyStack, lines:Array<InterpretLine>){
+    public program:Program;
+
+    constructor(prog:Program, lines:Array<InterpretLine>){
+
+        //console.log("wfs_instance => __lines: ",lines)
 
         this.entries = new wfs_entries(lines);
         this.builtin = new wfs_builtin(this);
 
-        this.variables = new wfs_vars(v);
-        this.functions = new wfs_funcs(f);
-        this.properties = p;
+        this.variables = new wfs_vars(prog.varStack);
+        this.functions = new wfs_funcs(prog.funcStack);
+        this.properties = prog.propertyStack;
+
+        this.program = prog;
     }
 }

@@ -11,6 +11,7 @@ export class configuration{
     public constants = {};
     public blocks = {};
     public properties = {};
+    public debug:boolean = false;
 }
 
 export class constant{

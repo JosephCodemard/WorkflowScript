@@ -77,6 +77,10 @@ function runcli(obj:any){
 		}
 	}
 
+	if(obj.debug){
+		config.debug = true;
+	}
+
 	if(obj.interpret !== undefined){
 
 		output("- Adding constants")

@@ -1,6 +1,6 @@
 // IMPORTS
 import { parse } from "../parser/parser"
-import { Interpreter } from "../interpreter/interpreter"
+import { Program } from "../interpreter/program"
 import * as fun from "./interpreterfuncs";
 // EXPORTS
 export {configuration, constant, WorkflowScript, block, func, property} from "./interpreterfuncs";
@@ -14,6 +14,7 @@ export function interpret(_script:any, config:fun.configuration){
 
     const _parsed = parse(_script);
 
-    var interpreter = new Interpreter(_parsed, config);
-    interpreter.interpret();
+    const program = new Program(_parsed, config);
+
+    program.ExecuteProgram();
 }

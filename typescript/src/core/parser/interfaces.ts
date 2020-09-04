@@ -12,5 +12,6 @@ export interface LineData{
 
 export interface InterpretLine {
     parsed: Array<string>;
-    line: LineData
+    line: LineData,
+    lineindex: number;
 }

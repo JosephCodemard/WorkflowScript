@@ -44,5 +44,7 @@ export const RESERVED_BLOCKS :Array<Block> = [
     LOOPS_BLOCK
 ]
 
-export const RESERVED_PROPERTIES :Array<Property> = []
+export const RESERVED_PROPERTIES :Array<Property> = [
+    //{"name":"name", type: TYPES.RESERVED}
+]
 RESERVED_BLOCKS.forEach(b => ( b.properties.forEach ( p => RESERVED_PROPERTIES.push( p ) ) ) )

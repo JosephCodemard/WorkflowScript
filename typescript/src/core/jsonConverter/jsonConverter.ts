@@ -12,13 +12,12 @@ export function convert (lines: InterpretLine[]) {
     var __object = {};
 
     for (let i = 0; i < lines.length; i++) {
-        if(lines[i].line.block){
-            //console.log("BLOCK: ", lines[i].line , " | ", lines[i].parsed);
+        if(lines[i].line.block){           
             
             _.set(__object, lines[i].parsed, {});
         }
         if(!lines[i].line.block){
-            //console.log("ENTRY: ", lines[i].line , " | ", lines[i].parsed);
+
             var tempObj = _.get(__object, lines[i].parsed);
 
             if(tempObj[lines[i].line.name]){
