@@ -37,7 +37,10 @@ export function ExecuteBlock(lines:InterpretLine[], prog:Program){
             if(_str.includes(b.path)){
         
                 const elements = GetElements(prog.lines, blockName.lineindex, prog);
-                          
+                
+                //console.log(allLines)
+                //console.log(" ELEMENTS: ", elements)
+                
                 if(ArrContainsArr(elements,b.properties)){
 
                     const _wfs = new wfs(prog, elements);

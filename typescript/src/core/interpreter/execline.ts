@@ -11,9 +11,40 @@ import { InterpretLine } from "../parser/parser";
 import { Program } from "./program"
 
 
-export function ExecuteLine(line:InterpretLine, prog:Program){
+export function SubstituteVariables(_str, prog:Program){
+    const _regex = /(\$\{\{)(.*?)(\}\})/g // searches for ${{ ... }}
+    const matches = _str.match(_regex)
 
-    //console.log("EXECUTE LINE")
+    // if it finds a variable replace it with the correct value
+    if(matches){
+
+        for (let j = 0; j < matches.length; j++) {
+            var vname_raw = _str.match(_regex)[0]
+            var vname = vname_raw.replace(/[(\$\{\{)(\}\}]/g, "").trim();
+            var vval = undefined
+
+            for (let k = 0; k < prog.varStack.Get().length; k++) {
+                if(prog.varStack.Get()[k].name === vname){
+                    vval = prog.varStack.Get()[k].value;
+                }                    
+            }
+
+            if(vval == undefined){
+                vval == "???"
+                throw new WFS_ERROR(ERRORCODES.FATAL, ERRORTYPES.INVALID_SYNTAX, `"${vname}" is undefined in this context`);
+            }
+
+            _str = _str.replace(vname_raw, vval);
+        }
+
+        return _str;
+    }else{
+        return false;
+    }
+}
+
+
+export function ExecuteLine(line:InterpretLine, prog:Program){
 
     // splits the line into relevant info
     var params = line.line.value.split(",")
@@ -21,6 +52,8 @@ export function ExecuteLine(line:InterpretLine, prog:Program){
 
     var _FUNCTION:Function;
     var expectvar:boolean;
+
+    var vval = undefined
 
     // find the function name of the line E.G -[log]: "blah blah blah"  -> log is _FUNCTION
     for (let i = 0; i < prog.funcStack.Get().length; i++) {
@@ -32,7 +65,6 @@ export function ExecuteLine(line:InterpretLine, prog:Program){
 
     // if the function exepects a variable it will be found on the stack (hopefully!)
     if(expectvar){
-        //prog.log("FUNCTION expects a variable");
 
         for (let i = 0; i < params.length; i++) {
             for (let k = 0; k < prog.varStack.Get().length; k++) {
@@ -46,37 +78,17 @@ export function ExecuteLine(line:InterpretLine, prog:Program){
                 throw new WFS_ERROR(ERRORCODES.WARNING, ERRORTYPES.INVALID_SYNTAX, `Variable "${params[i]}" does not exist in this context`);
             }
                 
-            params[i] = params[i] = vval;
+            params[i] = vval;
         }
 
     // if not just execute normally
     }else{
         for (let i = 0; i < params.length; i++) {
 
-            const _regex = /(\$\{\{)(.*?)(\}\})/g // searches for ${{ ... }}
-            const matches = params[i].match(_regex)
+            var subVars = SubstituteVariables(params[i], prog);
 
-            // if it finds a variable replace it with the correct value
-            if(matches){
-
-                for (let j = 0; j < matches.length; j++) {
-                    var vname_raw = params[i].match(_regex)[0]
-                    var vname = vname_raw.replace(/[(\$\{\{)(\}\}]/g, "").trim();
-                    var vval = undefined
-
-                    for (let k = 0; k < prog.varStack.Get().length; k++) {
-                        if(prog.varStack.Get()[k].name === vname){
-                            vval = prog.varStack.Get()[k].value;
-                        }                    
-                    }
-
-                    if(vval == undefined){
-                        vval == "???"
-                        throw new WFS_ERROR(ERRORCODES.FATAL, ERRORTYPES.INVALID_SYNTAX, `"${vname}" is undefined in this context`);
-                    }
-
-                    params[i] = params[i].replace(vname_raw, vval);
-                }
+            if(subVars){
+                params[i] = subVars;    
             // if not just execute normally
             }else{
                 for (let k = 0; k < prog.varStack.Get().length; k++) {

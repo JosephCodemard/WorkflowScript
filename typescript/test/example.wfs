@@ -2,15 +2,15 @@
 define:
     - greeting: hello
     - name: jeff
+    - cond_1: true
+    - cond_2: true
 
 run:
-    - log: ${{ greeting }} world from ${{ js }}
+    if:
+        - condition: ${{ cond_1 }}
+        - log: condition 1 is true !!!
 
-    loop:
-        - loops: 2
-        - log: hello
-
-        loop:
-            - loops: 2
-            - log: world
-        - log: bye
+ 
+    if:
+        - condition: ${{ cond_2 }}
+        - log: condition 2 is true !!!

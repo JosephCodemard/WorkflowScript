@@ -8,16 +8,18 @@ import { PropertyStack } from "./types/properties";
 import { InterpretLine } from "../parser/parser";
 
 import { ExecuteBlock } from "./execblock"
-import { ExecuteLine } from "./execline"
+import { ExecuteLine, SubstituteVariables } from "./execline"
 import { Program } from "./program";
 import { GetElements } from "./utils";
 
 class wfs_entries{
 
     private entries:InterpretLine[] = [];
+    private _wfs:wfs
 
-    constructor(lines:Array<InterpretLine>){
+    constructor(lines:Array<InterpretLine>, _wfs:wfs){
         this.entries = lines;
+        this._wfs = _wfs;
     }
 
     GetAll(){
@@ -39,12 +41,18 @@ class wfs_entries{
         return this.entries;
     }
 
-    Get(name:string){
+    Get(name:string, evalVars = true){
         for (let i = 0; i < this.entries.length; i++) {
             if(! this.entries[i].line.block && this.entries[i].line.name == name){
+
+                var _name = this.entries[i].line.name;
+                var _val = this.entries[i].line.value;
+
+                if(evalVars){ _val = SubstituteVariables( _val, this._wfs.program ); }
+
                 return {
-                    name: this.entries[i].line.name,
-                    value: this.entries[i].line.value
+                    name: _name,
+                    value: _val
                 }
             }            
         }
@@ -74,10 +82,11 @@ class wfs_builtin{
         var i = 0;
         lines.forEach(l => {
             if(!l.line.block){
-                this._wfs.program.log(" - executing line: ", l.line.name, " at ", l.parsed);
+                //this._wfs.program
+                console.log(" - executing line: '" + l.line.name + "' at ", l.parsed);
                 ExecuteLine(l, this._wfs.program);
             }else{
-                this._wfs.program.log(" - executing block: ", l.line.name, " at ", l.parsed);
+                console.log(" - executing block: '" + l.line.name + "' at ", l.parsed);
                 var linesToExecute = [lines[i]]
                 linesToExecute.push(...GetElements(lines, i, this._wfs.program));
                 ExecuteBlock(linesToExecute, this._wfs.program)
@@ -170,7 +179,7 @@ export class wfs{
 
         //console.log("wfs_instance => __lines: ",lines)
 
-        this.entries = new wfs_entries(lines);
+        this.entries = new wfs_entries(lines, this);
         this.builtin = new wfs_builtin(this);
 
         this.variables = new wfs_vars(prog.varStack);

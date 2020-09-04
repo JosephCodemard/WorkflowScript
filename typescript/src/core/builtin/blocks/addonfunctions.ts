@@ -2,6 +2,10 @@
 import { wfs } from "../../interpreter/wfs";
 
 export function If_func(wfs:wfs){
+
+    console.log("condition: ", wfs.entries.Get("condition").value);
+    console.log(" -> ", wfs.entries.GetAll())
+
     if(wfs.entries.Get("condition").value === "true"){
         wfs.builtin.execAll(wfs.entries.GetAllRaw());
     }
