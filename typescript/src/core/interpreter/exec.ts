@@ -37,7 +37,6 @@ export class Executor{
                     firstBlock = RemoveLastElement(lines[i].parsed);
                 }
 
-
                 if(ArrayCompare(RemoveLastElement(lines[i].parsed), firstBlock)){
 
                     var linesToExecute = [lines[i]]

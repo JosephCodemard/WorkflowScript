@@ -6,12 +6,12 @@ import { FuncStack } from "./types/functions";
 import { BlockStack } from "./types/blocks";
 import { PropertyStack } from "./types/properties";
 
-import { RESERVED_FUNCTIONS, RESERVED_VARIABLES, RESERVED_BLOCKS, RESERVED_PROPERTIES } from "../builtin/builtin"
+import { RESERVED_FUNCTIONS, RESERVED_VARIABLES, RESERVED_BLOCKS, RESERVED_PROPERTIES, RESEVED_FLAGS } from "../builtin/builtin"
 import { Interpreter } from "./interpreter"
 
 import { configuration } from "../language-setup/interpreterfuncs"
 import { InterpretLine } from "../parser/parser"
-import { wfs } from "./wfs";
+import { FlagStack } from "./types/flags";
 
 
 export class Program{
@@ -21,9 +21,10 @@ export class Program{
     public funcStack = new FuncStack(RESERVED_FUNCTIONS);
     public blockStack = new BlockStack(RESERVED_BLOCKS);
     public propertyStack = new PropertyStack(RESERVED_PROPERTIES);
+    public flagStack = new FlagStack(RESEVED_FLAGS);
 
     public interpreter = new Interpreter(this);
-    //public wfs:wfs;
+
 
     public lines:Array<InterpretLine>;
 
@@ -39,10 +40,6 @@ export class Program{
     constructor(interpretLines:Array<InterpretLine>, config: configuration){
         this.lines = interpretLines;
         this._log = config.debug;
-
-        //this.wfs = new wfs(this, this.lines);
-
-
 
         // Add all variables defined in the config obj to the relevant stacks....
         for(var key in config.properties){

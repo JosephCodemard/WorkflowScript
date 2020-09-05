@@ -11,6 +11,7 @@ import { ExecuteBlock } from "./execblock"
 import { ExecuteLine, SubstituteVariables } from "./execline"
 import { Program } from "./program";
 import { GetElements } from "./utils";
+import { FlagStack } from "./types/flags";
 
 class wfs_entries{
 
@@ -83,10 +84,10 @@ class wfs_builtin{
         lines.forEach(l => {
             if(!l.line.block){
                 //this._wfs.program
-                console.log(" - executing line: '" + l.line.name + "' at ", l.parsed);
+                console.log("   - executing line: '" + l.line.name + "' at ", l.parsed);
                 ExecuteLine(l, this._wfs.program);
             }else{
-                console.log(" - executing block: '" + l.line.name + "' at ", l.parsed);
+                console.log("   - executing block: '" + l.line.name + "' at ", l.parsed);
                 var linesToExecute = [lines[i]]
                 linesToExecute.push(...GetElements(lines, i, this._wfs.program));
                 ExecuteBlock(linesToExecute, this._wfs.program)
@@ -120,7 +121,7 @@ class wfs_vars{
     Get(name:string){
         for (let i = 0; i < this.varstack.Get().length; i++) {
             if(this.varstack.Get()[i].name == name){
-                this.varstack.Get();
+                return this.varstack.Get()[i];
             }            
         }
     }
@@ -154,13 +155,45 @@ class wfs_funcs{
     Get(name:string){
         for (let i = 0; i < this.funcstack.Get().length; i++) {
             if(this.funcstack.Get()[i].name == name){
-                this.funcstack.Get();
+                return this.funcstack.Get()[i];
             }            
         }
     }
 
     Log(){
         this.funcstack.log();
+    }
+}
+
+class wfs_flags{
+
+    private flagstack:FlagStack
+
+    constructor(fs:FlagStack){
+        this.flagstack = fs;
+    }
+
+    Add(name:string, value:string){
+        this.flagstack.Add({
+            name:name,
+            value:value
+        });
+    }
+
+    GetAll(){
+        return this.flagstack.Get();
+    }
+
+    Get(name:string){
+        for (let i = 0; i < this.flagstack.Get().length; i++) {
+            if(this.flagstack.Get()[i].name == name){
+                return this.flagstack.Get()[i];
+            }            
+        }
+    }
+
+    Log(){
+        this.flagstack.log();
     }
 }
 
@@ -171,6 +204,8 @@ export class wfs{
 
     public variables:wfs_vars;
     public functions:wfs_funcs;
+    public flags:wfs_flags;
+
     public properties:PropertyStack;
 
     public program:Program;
@@ -184,6 +219,8 @@ export class wfs{
 
         this.variables = new wfs_vars(prog.varStack);
         this.functions = new wfs_funcs(prog.funcStack);
+        this.flags = new wfs_flags(prog.flagStack);
+
         this.properties = prog.propertyStack;
 
         this.program = prog;

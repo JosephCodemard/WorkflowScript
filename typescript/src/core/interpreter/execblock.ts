@@ -12,6 +12,8 @@ import { ArrContainsArr, GetElements } from "./utils"
 // Wants to eat GetElements()[]...  IT WILL BE A BLOCK !!!
 export function ExecuteBlock(lines:InterpretLine[], prog:Program){
     
+//    console.log(lines)
+
     prog.log("EB lines: ", lines)
 
     const allLines = lines;//prog.lines;

@@ -26,28 +26,41 @@ export function GetElements(lines: InterpretLine[], i:number, prog:Program){
     var path = lines[i].parsed
     var elements:Array<InterpretLine> = []
 
+    // Check if the paths match ( eg ['main', 'run'] == ['main', 'run'])
     const PathsMatch = (arr:any[], target:any[]) => {
        for (let l = 0; l < arr.length; l++) { if(arr[l] !== target[l]){ return false; } }
        return true;
     };
 
-    for (let j = i; j < lines.length; j++) {// loop through rest of the lines
+    for (let j = i; j < lines.length; j++) {// loop through rest of the lines (start at the block line index)
 
-        if( !lines[j].line.block ){ // is not block
+        if( ! lines[j].line.block ) // is not block
+        { 
 
             if( PathsMatch(lines[j].parsed, [...path]) && (lines[j].parsed.length >= [...path].length) ){ // if they match
                 elements.push(lines[j]);
             }
 
-        }else{ // is a block
-
+        }
+        else // is a block
+        { 
+            
             let temp_proj_path = [...lines[j].parsed]
-            temp_proj_path.pop();
+
+            // remove last element in path ( eg ["main", "run"] is now equal to ["main"] )
+            temp_proj_path.pop(); 
+        
 
             if( PathsMatch(temp_proj_path, [...path] ) && (lines[j].parsed.length > [...path].length)){ // if they match
                 elements.push(lines[j]);
+            }else{
+                // reach the end of the block...
+                if( PathsMatch(temp_proj_path, [...path] ) && ( lines[j].parsed.length == [...path].length ) && j !== i ) {
+                    break;
+                }
             }    
         }
     }
+
     return elements;
 }

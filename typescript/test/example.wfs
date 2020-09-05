@@ -3,14 +3,14 @@ define:
     - greeting: hello
     - name: jeff
     - cond_1: true
-    - cond_2: true
+    - cond_2: false
 
 run:
     if:
         - condition: ${{ cond_1 }}
         - log: condition 1 is true !!!
-
  
     if:
         - condition: ${{ cond_2 }}
         - log: condition 2 is true !!!
+
