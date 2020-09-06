@@ -19,15 +19,34 @@ export class BlockStack{
         this.blocks = b;
     }
 
-    public Get() {
+    public Get(name:string) {
+        for (let i = 0; i < this.blocks.length; i++) {
+            if(name == this.blocks[i].name){
+                return this.blocks[i];
+            }            
+        }
+    } 
+    public GetAll() {
         return this.blocks;
     }    
 
-    public Add(_block:Block){
-        this.blocks.push(_block);
+    public Add(_:Block){
+        this.blocks.push(_);
     }
 
     public log(){
-        console.log(this.Get());
+        console.log(this.GetAll());
+    }
+
+    public SetAll(_:Array<Block>) {
+        this.blocks = _;
+    }
+
+    public Set(_:Block) {
+        for (let i = 0; i < this.blocks.length; i++) {
+            if(_.name == this.blocks[i].name){
+                this.blocks[i] = _;
+            }            
+        }
     }
 }

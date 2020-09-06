@@ -23,9 +23,9 @@ export function SubstituteVariables(_str, prog:Program){
             var vname = vname_raw.replace(/[(\$\{\{)(\}\}]/g, "").trim();
             var vval = undefined
 
-            for (let k = 0; k < prog.varStack.Get().length; k++) {
-                if(prog.varStack.Get()[k].name === vname){
-                    vval = prog.varStack.Get()[k].value;
+            for (let k = 0; k < prog.varStack.GetAll().length; k++) {
+                if(prog.varStack.GetAll()[k].name === vname){
+                    vval = prog.varStack.GetAll()[k].value;
                 }                    
             }
 
@@ -56,10 +56,10 @@ export function ExecuteLine(line:InterpretLine, prog:Program){
     var vval = undefined
 
     // find the function name of the line E.G -[log]: "blah blah blah"  -> log is _FUNCTION
-    for (let i = 0; i < prog.funcStack.Get().length; i++) {
-        if(prog.funcStack.Get()[i].name === name){
-            _FUNCTION = prog.funcStack.Get()[i].func;
-            expectvar = prog.funcStack.Get()[i].expectvar
+    for (let i = 0; i < prog.funcStack.GetAll().length; i++) {
+        if(prog.funcStack.GetAll()[i].name === name){
+            _FUNCTION = prog.funcStack.GetAll()[i].func;
+            expectvar = prog.funcStack.GetAll()[i].expectvar
         }
     }
 
@@ -67,9 +67,9 @@ export function ExecuteLine(line:InterpretLine, prog:Program){
     if(expectvar){
 
         for (let i = 0; i < params.length; i++) {
-            for (let k = 0; k < prog.varStack.Get().length; k++) {
-                if(prog.varStack.Get()[k].name === params[i]){
-                    vval = prog.varStack.Get()[k].value;
+            for (let k = 0; k < prog.varStack.GetAll().length; k++) {
+                if(prog.varStack.GetAll()[k].name === params[i]){
+                    vval = prog.varStack.GetAll()[k].value;
                 }                    
             }
 
@@ -91,9 +91,9 @@ export function ExecuteLine(line:InterpretLine, prog:Program){
                 params[i] = subVars;    
             // if not just execute normally
             }else{
-                for (let k = 0; k < prog.varStack.Get().length; k++) {
-                    if(params[i] === prog.varStack.Get()[k].name){
-                        params[i] = prog.varStack.Get()[k].value
+                for (let k = 0; k < prog.varStack.GetAll().length; k++) {
+                    if(params[i] === prog.varStack.GetAll()[k].name){
+                        params[i] = prog.varStack.GetAll()[k].value
                     }                
                 }  
             }          
@@ -104,14 +104,14 @@ export function ExecuteLine(line:InterpretLine, prog:Program){
     if(!_FUNCTION){
 
         // check if it is a property
-        for (let i = 0; i < prog.propertyStack.Get().length; i++) {
-            if(prog.propertyStack.Get()[i].name == name){
+        for (let i = 0; i < prog.propertyStack.GetAll().length; i++) {
+            if(prog.propertyStack.GetAll()[i].name == name){
                 return
             }
         }
 
         // then throw an error
-        prog.log("properties:", prog.propertyStack.Get());
+        prog.log("properties:", prog.propertyStack.GetAll());
         throw new WFS_ERROR(ERRORCODES.FATAL, ERRORTYPES.INVALID_CONFIGURATION, `function "${name}" does not exist in the current context`);
     }
 

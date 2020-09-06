@@ -5,13 +5,18 @@ export function If_func(wfs:wfs){
 
     if(wfs.entries.Get("condition").value === "true"){
         wfs.builtin.execAll(wfs.entries.GetAllRaw());
+        wfs.flags.Set("condition", "false");
+    }else{
+        wfs.flags.Set("condition", "true");
     }
 }
 
 export function Else_func(wfs:wfs){
 
     if(wfs.flags.Get("condition").value === "true"){
-        wfs.flags.Get("condition").value = "true"
+        wfs.flags.Set("condition", "false");
+    }else{
+        wfs.flags.Set("condition", "true");
         wfs.builtin.execAll(wfs.entries.GetAllRaw());
     }
 }

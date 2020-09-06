@@ -23,8 +23,8 @@ export function ExecuteBlock(lines:InterpretLine[], prog:Program){
     const line = blockName;//allLines[i];
 
         // loop through all the avalible blocks
-    for(let k = 0; k < prog.blockStack.Get().length; k++){
-        const b = prog.blockStack.Get()[k];
+    for(let k = 0; k < prog.blockStack.GetAll().length; k++){
+        const b = prog.blockStack.GetAll()[k];
                 
             // check if block names are the same
         if(b.name == line.parsed[line.parsed.length - 1]){
@@ -40,8 +40,6 @@ export function ExecuteBlock(lines:InterpretLine[], prog:Program){
         
                 const elements = GetElements(prog.lines, blockName.lineindex, prog);
                 
-                //console.log(allLines)
-                //console.log(" ELEMENTS: ", elements)
                 
                 if(ArrContainsArr(elements,b.properties)){
 

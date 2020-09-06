@@ -15,15 +15,34 @@ export class VarStack{
         this.variables = v;
     }
 
-    public Get() {
+    public Get(name:string) {
+        for (let i = 0; i < this.variables.length; i++) {
+            if(name == this.variables[i].name){
+                return this.variables[i];
+            }            
+        }
+    } 
+    public GetAll() {
         return this.variables;
     }    
 
-    public Add(_var:Variable){
-        this.variables.push(_var);
+    public Add(_:Variable){
+        this.variables.push(_);
     }
 
     public log(){
-        console.log(this.Get());
+        console.log(this.GetAll());
+    }
+
+    public SetAll(_:Array<Variable>) {
+        this.variables = _;
+    }
+
+    public Set(_:Variable) {
+        for (let i = 0; i < this.variables.length; i++) {
+            if(_.name == this.variables[i].name){
+                this.variables[i] = _;
+            }            
+        }
     }
 }

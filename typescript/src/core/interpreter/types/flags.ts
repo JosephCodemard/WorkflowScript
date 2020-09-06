@@ -1,10 +1,10 @@
 import { TYPES } from "./types"
-import { Property } from "./properties"
 
 
 export interface Flag{
     name:string;
     value:string;
+    type: TYPES;
 }
 
 export class FlagStack{
@@ -15,15 +15,34 @@ export class FlagStack{
         this.flags = f;
     }
 
-    public Get() {
+    public Get(name:string) {
+        for (let i = 0; i < this.flags.length; i++) {
+            if(name == this.flags[i].name){
+                return this.flags[i];
+            }            
+        }
+    } 
+    public GetAll() {
         return this.flags;
     }    
 
-    public Add(_flag:Flag){
-        this.flags.push(_flag);
+    public Add(_:Flag){
+        this.flags.push(_);
     }
 
     public log(){
-        console.log(this.Get());
+        console.log(this.GetAll());
+    }
+
+    public SetAll(_:Array<Flag>) {
+        this.flags = _;
+    }
+
+    public Set(_:Flag) {
+        for (let i = 0; i < this.flags.length; i++) {
+            if(_.name == this.flags[i].name){
+                this.flags[i] = _;
+            }            
+        }
     }
 }

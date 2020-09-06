@@ -1,7 +1,7 @@
 // IMPORTS
 import { TYPES } from "../interpreter/types/types"
 
-import { FuncStack } from "./types/functions";
+import { FuncStack, Func } from "./types/functions";
 import { VarStack } from "./types/variables";
 import { PropertyStack } from "./types/properties";
 
@@ -83,11 +83,10 @@ class wfs_builtin{
         var i = 0;
         lines.forEach(l => {
             if(!l.line.block){
-                //this._wfs.program
-                console.log("   - executing line: '" + l.line.name + "' at ", l.parsed);
+                this._wfs.program.log("   - executing line: '" + l.line.name + "' at ", l.parsed);
                 ExecuteLine(l, this._wfs.program);
             }else{
-                console.log("   - executing block: '" + l.line.name + "' at ", l.parsed);
+                this._wfs.program.log("   - executing block: '" + l.line.name + "' at ", l.parsed);
                 var linesToExecute = [lines[i]]
                 linesToExecute.push(...GetElements(lines, i, this._wfs.program));
                 ExecuteBlock(linesToExecute, this._wfs.program)
@@ -114,16 +113,21 @@ class wfs_vars{
         });
     }
 
-    GetAll(){
-        return this.varstack.Get();
-    }
 
     Get(name:string){
-        for (let i = 0; i < this.varstack.Get().length; i++) {
-            if(this.varstack.Get()[i].name == name){
-                return this.varstack.Get()[i];
-            }            
-        }
+        return this.varstack.Get(name);
+    }
+
+    Set(name:string, value:string){
+        this.varstack.Set({
+            name:name,
+            value:value,
+            type: TYPES.USER_DEFINED 
+        });
+    }
+
+    GetAll(){
+        return this.varstack.GetAll();
     }
 
     Log(){
@@ -144,20 +148,30 @@ class wfs_funcs{
             name:name,
             func:func,
             expectvar: expectvar,
-            type: TYPES.CONFIG_DEFINED
+            type: TYPES.USER_DEFINED
+        });
+    }
+
+
+    Get(name:string){
+        return this.funcstack.Get(name);
+    }
+
+    Set(name:string, func:Function, expectvar=false){
+        this.funcstack.Set({
+            name:name,
+            func:func,
+            expectvar:expectvar,
+            type: TYPES.USER_DEFINED 
         });
     }
 
     GetAll(){
-        return this.funcstack.Get();
+        return this.funcstack.GetAll();
     }
 
-    Get(name:string){
-        for (let i = 0; i < this.funcstack.Get().length; i++) {
-            if(this.funcstack.Get()[i].name == name){
-                return this.funcstack.Get()[i];
-            }            
-        }
+    Clear(){
+        this.funcstack.SetAll([]);
     }
 
     Log(){
@@ -176,20 +190,29 @@ class wfs_flags{
     Add(name:string, value:string){
         this.flagstack.Add({
             name:name,
-            value:value
+            value:value,
+            type: TYPES.USER_DEFINED
         });
     }
 
-    GetAll(){
-        return this.flagstack.Get();
+    Set(name:string, value:string){
+        this.flagstack.Set({
+            name:name, 
+            value:value, 
+            type:TYPES.USER_DEFINED
+        });
     }
 
     Get(name:string){
-        for (let i = 0; i < this.flagstack.Get().length; i++) {
-            if(this.flagstack.Get()[i].name == name){
-                return this.flagstack.Get()[i];
-            }            
-        }
+        return this.flagstack.Get(name);
+    }
+
+    GetAll(){
+        return this.flagstack.GetAll();
+    }
+
+    Clear(){
+        this.flagstack.SetAll([]);
     }
 
     Log(){
@@ -212,7 +235,6 @@ export class wfs{
 
     constructor(prog:Program, lines:Array<InterpretLine>){
 
-        //console.log("wfs_instance => __lines: ",lines)
 
         this.entries = new wfs_entries(lines, this);
         this.builtin = new wfs_builtin(this);

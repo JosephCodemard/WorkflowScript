@@ -9,8 +9,12 @@ run:
     if:
         - condition: ${{ cond_1 }}
         - log: condition 1 is true !!!
+    else:
+        - log: condition 2 is false !!!
  
     if:
         - condition: ${{ cond_2 }}
         - log: condition 2 is true !!!
+    else:
+        - log: condition 2 is false !!!
 

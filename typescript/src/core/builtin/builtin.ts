@@ -30,7 +30,7 @@ export const RESERVED_BLOCKS :Array<Block> = [
 ]
 
 export const RESEVED_FLAGS :Array<Flag> = [
-    {name: "condition", value: "false"}
+    {name: "condition", value: "false", type:TYPES.RESERVED}
 ]
 
 export const RESERVED_PROPERTIES :Array<Property> = [

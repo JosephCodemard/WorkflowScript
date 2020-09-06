@@ -15,15 +15,34 @@ export class PropertyStack{
         this.properties = p;
     }
 
-    public Get() {
+    public Get(name:string) {
+        for (let i = 0; i < this.properties.length; i++) {
+            if(name == this.properties[i].name){
+                return this.properties[i];
+            }            
+        }
+    } 
+    public GetAll() {
         return this.properties;
     }    
 
-    public Add(_prop:Property){
-        this.properties.push(_prop);
+    public Add(_:Property){
+        this.properties.push(_);
     }
 
     public log(){
-        console.log(this.Get());
+        console.log(this.GetAll());
+    }
+
+    public SetAll(_:Array<Property>) {
+        this.properties = _;
+    }
+
+    public Set(_:Property) {
+        for (let i = 0; i < this.properties.length; i++) {
+            if(_.name == this.properties[i].name){
+                this.properties[i] = _;
+            }            
+        }
     }
 }
