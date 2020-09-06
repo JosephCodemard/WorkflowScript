@@ -1,8 +1,8 @@
 // IMPORTS
 import { TYPES } from "../interpreter/types/types"
 
-import { FuncStack, Func } from "./types/functions";
-import { VarStack, Variable } from "./types/variables";
+import { FuncStack } from "./types/functions";
+import { VarStack } from "./types/variables";
 import { PropertyStack } from "./types/properties";
 
 import { InterpretLine } from "../parser/parser";

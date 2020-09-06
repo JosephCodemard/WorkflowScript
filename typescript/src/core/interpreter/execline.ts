@@ -1,10 +1,3 @@
-import { TYPES } from "./types/types"
-
-import { FuncStack } from "./types/functions";
-import { VarStack } from "./types/variables";
-import { PropertyStack, Property } from "./types/properties";
-import { BlockStack } from "./types/blocks";
-
 import { WFS_ERROR, ERRORCODES, ERRORTYPES } from "../error/error"
 
 import { InterpretLine } from "../parser/parser";
