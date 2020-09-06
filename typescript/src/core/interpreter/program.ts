@@ -86,18 +86,17 @@ export class Program{
 
     ExecuteProgram(){
 
-        console.log("\n\n[...STARTING...]\n"); 
+        this.log("\n\n[...STARTING...]\n"); 
 
-        // interpret [ALL] the lines
         this.interpreter.Interpret(this.lines);
         
-        console.log("\n[...COMPLETE...]\n\n"); 
+        this.log("\n[...COMPLETE...]\n\n"); 
 
-        if(this._log){
-            this.varStack.log();
-            this.funcStack.log();
-            this.blockStack.log();
-        }
+        // if(this._log){
+        //     this.varStack.log();
+        //     this.funcStack.log();
+        //     this.blockStack.log();
+        // }
         
     }
 
