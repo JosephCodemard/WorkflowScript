@@ -3,7 +3,11 @@ import { ReadInperpreterInput } from "../language-setup/interpreterfuncs"
 import { InterpretLine, ParsedLine } from "./interfaces"
 import { strip, toTupple, ToLineData } from "./utils"
 
-
+/**
+ * [Parser] - parse
+ * @param {any} file Parses the file 
+ * @returns {InterpretLine[]} returns the parsed output
+ */
 function parse (file:any): Array<InterpretLine>{
 
     file = ReadInperpreterInput(file);

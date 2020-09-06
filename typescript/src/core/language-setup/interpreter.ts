@@ -5,7 +5,12 @@ import * as fun from "./interpreterfuncs";
 // EXPORTS
 export {configuration, constant, WorkflowScript, block, func, property} from "./interpreterfuncs";
 
-
+/**
+ * [interpreter] - interpret
+ * @description Starts running the program
+ * @param {any} _script the code to be run - a filename of class WorkFlowScript
+ * @param {configuration} config the config object - class Configuration
+ */
 export function interpret(_script:any, config:fun.configuration){
 
     const script = fun.ReadInperpreterInput(_script)
