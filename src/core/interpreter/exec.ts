@@ -22,7 +22,7 @@ export class Executor{
     }
 
     ExecuteSubProgram(lines:InterpretLine[]){
-
+    
         this.program.log("[INFO] line.length: ", lines.length)
 
         var firstBlock:string[] = undefined;

@@ -4,10 +4,6 @@
 */
 export * as Interpreter from "./language-setup/interpreter";
 /**
- * [JSONConverter]
-*/
-export * as JSONConverter from "./jsonConverter/jsonConverter";
-/**
  * [Parser]
 */
 export * as Parser from "./parser/parser";

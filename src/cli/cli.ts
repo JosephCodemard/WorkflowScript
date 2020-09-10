@@ -2,7 +2,7 @@
 import { program } from "commander"
 import { readFileSync ,existsSync, writeFileSync } from "fs"
 import { load } from "js-yaml"
-import { interpreter, JSONConverter, Parser, WFS_CONFIG } from "../core/WorkflowScript"
+import { Interpreter, Parser, WFS_CONFIG } from "../core/WorkflowScript"
 import { performance } from "perf_hooks"
 import { round } from "lodash"
 
@@ -51,7 +51,7 @@ function output(out){
 
 function runcli(obj:any){
 	
-	const config = new interpreter.configuration();
+	const config = new Interpreter.configuration();
 	var _parsed:any;
 
 	if(obj.file){
@@ -64,7 +64,7 @@ function runcli(obj:any){
 	}
 
 	if(obj.json){
-		const json = JSONConverter.convert(_parsed);
+		const json = _parsed;
 
 		if(obj.log){
 			output("- Outputing JSON");
@@ -86,12 +86,12 @@ function runcli(obj:any){
 		output("- Adding constants")
 		if(obj.constants !== undefined){
 			for (const key in obj.constants) {
-				config.constants[key] = new interpreter.constant(obj.constants[key]);
+				config.constants[key] = new Interpreter.constant(obj.constants[key]);
 			}
 		}
 
 		output("- Interpreting")
-		interpreter.interpret(obj.file, config);
+		Interpreter.interpret(obj.file, config);
 	}
 
 	const END_TIME = performance.now();

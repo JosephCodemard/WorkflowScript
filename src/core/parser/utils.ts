@@ -23,7 +23,6 @@ export function strip (str: string): string{
         }
         if(spaces > 2){
             str.split("").splice(i, spaces)
-            str[i] == " "
         }
         
     }

@@ -1,20 +1,17 @@
 
 define:
-    - greeting: hello
     - name: jeff
     - cond_1: true
-    - cond_2: false
 
 run:
+    - log: Hello ${{ name }}
+
     if:
         - condition: ${{ cond_1 }}
         - log: condition 1 is true !!!
     else:
         - log: condition 2 is false !!!
- 
-    if:
-        - condition: ${{ cond_2 }}
-        - log: condition 2 is true !!!
-    else:
-        - log: condition 2 is false !!!
+
+    myblock:
+        - myfunction: my block
 

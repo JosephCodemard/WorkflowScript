@@ -5,22 +5,15 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "forceConsistentCasingInFileNames": true,
-//    "sourceMap": true,
     "rootDir": "./",
     "outDir": "./dist",
     "baseUrl": "./modules/"
   },
-    // "files":[
-    //   "./parser/parser.ts",
-    //   "./parser/readFile.ts",
-    //   "./main.ts"
-    // ]
   "include": [
     "**/*"
   ],
   "exclude": [
     "node_modules",
-    //"./src/*.spec.ts"
     "*.spec.ts"
   ]
 }
