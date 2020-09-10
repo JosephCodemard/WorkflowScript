@@ -94,6 +94,9 @@ npm run compile
 ```
 To compile to the Typescript code to JavaScript
 
+## CLI
+
+run  `node dist/src/cli/cli.js --help`
 
 ## Contributing
 
